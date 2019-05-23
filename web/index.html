@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <script src="bower_components/bower-webfontloader/webfont.js"></script>
+        <script src="bower_components/snap.svg/dist/snap.svg-min.js"></script>
+        <script src="bower_components/underscore/underscore-min.js"></script>
+        <script src="bower_components/js-sequence-diagrams/dist/sequence-diagram-min.js"></script>
+        <style>
+            svg {
+                zoom: 0.7;
+                
+            }
+            .signal text {
+                fill: #000000;
+            }
+            .signal text:hover {
+                fill: #aaaaaa
+            }
+            .note rect, .note path {
+                
+            }
+            .title rect, .title path,
+            .actor rect, .actor path {
+                fill: #ffffff
+            }
+</style>
+    </head>
+    <body>
+        <input type="text" value="https://alex.helix-demo.xyz/" id="url" size="100"><input type="button" onclick="go()" value="Get diagram!">
+        <div id="diagram"></div>
+        <script>
+            function go() {
+                document.getElementById('diagram').innerHTML = '';
+                const url = document.getElementById('url');
+                console.log('url', url.value);
+
+                const req = new XMLHttpRequest();
+                req.open('GET', `/proxy?url=${url.value}`, false);
+                req.send(null);
+
+                if (req.status === 200) {
+                    console.log("Réponse reçue: %s", req.responseText);
+                    var d = Diagram.parse(req.responseText);
+                    var options = { theme: 'simple' };
+                    d.drawSVG('diagram', options);
+                }
+            }
+        </script>
+    </body>
+</html>
